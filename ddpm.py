@@ -65,7 +65,7 @@ class SinusoidalPositionEmbeddings(nn.Module):
     def forward(self, time):
         device = time.device
         half_dim = self.dim // 2
-        embedddings = np.log(1000) / (half_dim - 1)
+        embeddings = np.log(1000) / (half_dim - 1)
         # !!
         embeddings = torch.exp(torch.arange(half_dim, device=device) * - embeddings)
         embeddings = time[:, None] * embeddings[None, :]
@@ -99,7 +99,7 @@ class UNet(nn.Module):
 
         # Upsample
         self.ups = nn.ModuleList([
-            block(up_channels[i], up_channels[i+1], time_emb_dim, up=True)
+            Block(up_channels[i], up_channels[i+1], time_emb_dim, up=True)
             for i in range(len(up_channels)-1)
         ])
 
@@ -127,7 +127,7 @@ class UNet(nn.Module):
 
 # Forward diffusion process
 @torch.no_grad()
-def forard_diffusion(x_0, t, device="cuda"):
+def forward_diffusion(x_0, t, device="cuda"):
     noise = torch.randn_like(x_0)
     sqrt_alphas_cumprod_t = torch.sqrt(alphas_cumprod[t]).reshape(-1, 1, 1, 1)
     sqrt_one_minus_alphas_cumprod_t = torch.sqrt(1.0 - alphas_cumprod[t]).reshape(-1, 1, 1, 1)
