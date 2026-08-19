@@ -179,7 +179,7 @@ def forward_diffusion(x_0, t, device="cuda"):
 
                  if t == 0:
                      return pred_noise
-                     else:
+                 else:
                      noise = torch.randn_like(x)
                      return sqrt_recip_alphas_t * (x - betas_t * pred_noise / sqrt_one_minus_alphas_cumprod_t) + torch.sqrt(betas_t) * noise
 
