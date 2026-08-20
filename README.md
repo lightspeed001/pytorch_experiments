@@ -28,8 +28,12 @@
         pip install torch torchvision matplotlib tqdm numpy
         python ddpm_mnist.py  
   ```
-  * Expected Output: After ~20 epochs on MNIST, you'll see generated digits that resembe handwritten numbers.  
-  > * Vision Transformer (VIT)
+  * Expected Output: After ~20 epochs on MNIST, you should see generated digits that resembe handwritten numbers.  
+  > * Vision Transformer (VIT)  
+
+  ```bash
+        
+  ```
 
   
 
