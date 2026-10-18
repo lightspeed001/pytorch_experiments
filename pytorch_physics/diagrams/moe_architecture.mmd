@@ -1,0 +1,22 @@
+flowchart TD
+  X["Input x<br/>(B, S, input_dim)"] --> GATE["Gate: Linear<br/>energy per expert"]
+  GATE --> E["Energy scores<br/>(N, E)"]
+  X --> DISPATCH
+  E --> TOPK["topk(-energy, k=2)<br/>lowest-energy experts"]
+  TOPK --> IDX["Indices (N, k)"]
+  TOPK --> VALS["Selected energies (N, k)"]
+  VALS --> W["Boltzmann weights<br/>softmax over selected"]
+  IDX --> ROUTER
+  W --> ROUTER{"Router<br/>torch.where(idx == i)"}
+  ROUTER -->|"tokens to E0"| E0["Expert 0"]
+  ROUTER -->|"tokens to E1"| E1["Expert 1"]
+  ROUTER -->|"tokens to E2"| E2["Expert 2"]
+  ROUTER -->|"tokens to E3"| E3["Expert 3"]
+  E0 --> SUM["index_add_<br/>w_i x out_i"]
+  E1 --> SUM
+  E2 --> SUM
+  E3 --> SUM
+  SUM --> OUT["Output<br/>(B, S, output_dim)"]
+  E -.->|"importance P_i"| AUX["Load-balancing loss<br/>E x sum(P_i x f_i)"]
+  IDX -.->|"load f_i"| AUX
+  AUX -.->|"during training"| OUT
